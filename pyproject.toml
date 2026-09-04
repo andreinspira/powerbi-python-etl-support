@@ -47,8 +47,8 @@ powerbi = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/andremagalhaes/powerbi-python-etl-support"
-Repository = "https://github.com/andremagalhaes/powerbi-python-etl-support"
+Homepage = "https://github.com/andreinspira/powerbi-python-etl-support"
+Repository = "https://github.com/andreinspira/powerbi-python-etl-support"
 
 [project.scripts]
 run-pipeline = "src.powerbi_etl.pipeline.run_pipeline:app"
