@@ -1,0 +1,84 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "powerbi-python-etl-support"
+version = "1.0.0"
+description = "Python ETL pipelines for Power BI data preparation - portfolio demonstration for Power BI + Python Support Collaborator role"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+  {name = "André Guilherme da Cunha Magalhães", email = "oficial.andre@hotmail.com"}
+]
+requires-python = ">=3.10"
+dependencies = [
+  "pandas>=2.1.0",
+  "pydantic>=2.5.0",
+  "pydantic-settings>=2.1.0",
+  "pyyaml>=6.0.1",
+  "structlog>=24.1.0",
+  "tenacity>=8.2.0",
+  "httpx>=0.26.0",
+  "openpyxl>=3.1.0",
+  "sqlalchemy>=2.0.0",
+  "python-dotenv>=1.0.0",
+  "rich>=13.7.0",
+  "typer>=0.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4.0",
+  "pytest-cov>=4.1.0",
+  "pytest-mock>=3.12.0",
+  "black>=23.12.0",
+  "ruff>=0.1.0",
+  "mypy>=1.8.0",
+  "pre-commit>=3.6.0",
+]
+cloud = [
+  "boto3>=1.34.0",
+  "azure-storage-blob>=12.19.0",
+  "azure-identity>=1.15.0",
+]
+powerbi = [
+  "powerbiclient>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/andremagalhaes/powerbi-python-etl-support"
+Repository = "https://github.com/andremagalhaes/powerbi-python-etl-support"
+
+[project.scripts]
+run-pipeline = "src.powerbi_etl.pipeline.run_pipeline:app"
+sanitize-outputs = "scripts.sanitize_outputs:app"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=src --cov-report=term-missing"
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "I", "UP", "W", "C90", "ANN", "T20", "PT", "PTH", "ERA", "RET", "SIM", "TCH", "ARG", "PL", "TRY", "NPY", "PERF", "FURB", "LOG", "PIE", "TID", "AIR", "PD", "PGH", "RSE", "RUF", "DTZ", "EXE", "ICN", "QF", "FIX", "FLY", "NPY", "TCH", "TRY", "UP", "W"]
+ignore = ["E501", "ANN001", "ANN002", "ANN003", "ANN201", "ANN202", "ANN204", "ANN401", "D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107", "T201", "T203", "PTH118", "PTH120", "S101", "S106", "S311", "S603", "S607"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+strict_optional = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["powerbi_etl*"]

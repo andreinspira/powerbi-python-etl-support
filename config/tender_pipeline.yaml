@@ -1,0 +1,97 @@
+name: "tender_pipeline"
+description: "Extracts tender data from Excel/SharePoint, transforms for Power BI, loads to Excel/Database. Demonstrates monthly/quarterly spread calculations required for PP-010/PP-011."
+schedule: "0 6 * * 1"  # Weekly Monday 6 AM
+
+source:
+  type: "excel"
+  file_path: "data/raw/Tender_Register_Sample.xlsx"
+  sheet_name: 0
+  header_row: 0
+
+transforms:
+  - name: "extract_raw"
+    type: "extract"
+    config:
+      extractor: "excel"
+      file_path: "data/raw/Tender_Register_Sample.xlsx"
+      sheet_name: 0
+    description: "Extract raw tender register data from Excel"
+
+  - name: "validate_schema"
+    type: "transform"
+    config:
+      transform: "validate"
+    depends_on: ["extract_raw"]
+    description: "Validate data against TenderRaw schema with quarantine for invalid records"
+
+  - name: "clean_data"
+    type: "transform"
+    config:
+      transform: "clean_tender"
+    depends_on: ["validate_schema"]
+    description: "Clean and standardize tender data (strings, dates, numbers, status)"
+
+  - name: "calculate_spreads"
+    type: "transform"
+    config:
+      transform: "calculate_spreads"
+    depends_on: ["clean_data"]
+    description: "Calculate monthly/quarterly spreads (KEY for PP-010/PP-011)"
+
+  - name: "add_calculated_fields"
+    type: "transform"
+    config:
+      transform: "add_calculated_fields"
+      source_type: "tender"
+    depends_on: ["calculate_spreads"]
+    description: "Add flags, tiers, and calculated fields for Power BI"
+
+  - name: "load_excel"
+    type: "load"
+    config:
+      loader: "excel"
+      output_path: "data/output/Tender_Dashboard_Source.xlsx"
+      sheet_name: "fact_Tenders"
+      column_formats:
+        TenderValue:
+          number_format: "#,##0.00"
+        ReportingValue:
+          number_format: "#,##0.00"
+        WeightedValue:
+          number_format: "#,##0.00"
+        ProbabilityPercentage:
+          number_format: "0%"
+        MonthlySpread:
+          number_format: "#,##0.00"
+        QuarterlySpread:
+          number_format: "#,##0.00"
+        ProjectStartDate:
+          number_format: "YYYY-MM-DD"
+        ProjectEndDate:
+          number_format: "YYYY-MM-DD"
+    depends_on: ["add_calculated_fields"]
+    description: "Load formatted Excel ready for Power BI consumption"
+
+  - name: "load_database"
+    type: "load"
+    config:
+      loader: "database"
+      table: "fact_tenders"
+      schema: "staging"
+      if_exists: "replace"
+      primary_key: "tender_key"
+    depends_on: ["add_calculated_fields"]
+    description: "Load to PostgreSQL staging (optional - requires DB)"
+    optional: true
+
+destination:
+  type: "excel"
+  path: "data/output/Tender_Dashboard_Source.xlsx"
+
+notifications:
+  on_success:
+    - type: "log"
+      message: "Tender pipeline completed successfully"
+  on_failure:
+    - type: "log"
+      message: "Tender pipeline failed"
