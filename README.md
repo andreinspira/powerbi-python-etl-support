@@ -45,7 +45,7 @@ This repository demonstrates end-to-end ETL capabilities specifically tailored f
 
 ```bash
 # Clone and setup
-git clone https://github.com/andremagalhaes/powerbi-python-etl-support.git
+git clone https://github.com/andreinspira/powerbi-python-etl-support.git
 cd powerbi-python-etl-support
 
 # Install dependencies
@@ -83,6 +83,8 @@ powerbi-python-etl-support/
 ├── tests/
 │   ├── unit/
 │   └── integration/
+├── .github/workflows/ci.yml   # Automated test workflow
+├── LICENSE
 ├── pyproject.toml
 └── README.md
 ```
@@ -196,15 +198,9 @@ ruff check src/ tests/
 black src/ tests/
 ```
 
-## CI/CD
+## CI
 
-GitHub Actions workflow (`.github/workflows/ci.yml`):
-- Lint (ruff, black)
-- Type check (mypy)
-- Unit + integration tests
-- Coverage reporting
-- Build package
-- Deploy to PyPI (on main branch)
+GitHub Actions workflow (`.github/workflows/ci.yml`) installs the project with development dependencies and runs the automated unit and integration test suite on pushes to `main` and on pull requests.
 
 ## Portfolio Sanitization
 
@@ -237,7 +233,7 @@ MIT License — see [LICENSE](LICENSE) for details.
 **André Guilherme da Cunha Magalhães**  
 Power BI + Python Specialist | Data Engineering & BI  
 📧 oficial.andre@hotmail.com  
-🔗 https://github.com/andremagalhaes
+🔗 https://github.com/andreinspira
 
 ---
 
