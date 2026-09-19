@@ -224,6 +224,4 @@ MIT License — see [LICENSE](LICENSE) for details.
 Power BI + Python | Data Engineering & BI  
 https://github.com/andreinspira
 
----
 
-*Portfolio demonstration project. All demonstration data is synthetic; no client-confidential data is included.*
