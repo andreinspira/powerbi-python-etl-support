@@ -142,3 +142,5 @@ temp/
 
 # OS files
 Desktop.ini
+# Local Python virtual environment
+.venv/
