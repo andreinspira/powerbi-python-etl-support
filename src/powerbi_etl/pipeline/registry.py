@@ -18,6 +18,7 @@ class PipelineRegistry:
     """
 
     def __init__(self, config_dir: str = "config"):
+        self.logger = logger
         self.config_dir = Path(config_dir)
         self._pipelines: Dict[str, PipelineConfig] = {}
         self._load_all()
